@@ -1,6 +1,7 @@
 
 package com.mycompany.practica6diu;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Practica6 extends javax.swing.JFrame {
     JFileChooser fc = new JFileChooser();
     FileNameExtensionFilter filtro = null;
     public Practica6() {
+        this.setMinimumSize(new Dimension(800, 600));
         initComponents();
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -56,9 +58,6 @@ public class Practica6 extends javax.swing.JFrame {
         MenuEdicion = new javax.swing.JMenu();
         menuFiltros = new javax.swing.JMenu();
         umbralizar = new javax.swing.JMenuItem();
-        realice = new javax.swing.JMenuItem();
-        polarizado = new javax.swing.JMenuItem();
-        menuColor = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,6 +119,7 @@ public class Practica6 extends javax.swing.JFrame {
 
         menuFiltros.setText("Filtros");
 
+        umbralizar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         umbralizar.setText("Umbralizar");
         umbralizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,16 +128,7 @@ public class Practica6 extends javax.swing.JFrame {
         });
         menuFiltros.add(umbralizar);
 
-        realice.setText("Realice");
-        menuFiltros.add(realice);
-
-        polarizado.setText("Polarizado");
-        menuFiltros.add(polarizado);
-
         MenuEdicion.add(menuFiltros);
-
-        menuColor.setText("Color");
-        MenuEdicion.add(menuColor);
 
         jMenuBar1.add(MenuEdicion);
 
@@ -172,6 +163,7 @@ public class Practica6 extends javax.swing.JFrame {
             System.out.println("Fichero: "+fichero.getAbsolutePath());
             try {
                 lienzo.setImagen(fichero.getAbsolutePath());
+                
                 repaint();
             } catch (IOException ex) {
                 Logger.getLogger(Practica6.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,11 +192,17 @@ public class Practica6 extends javax.swing.JFrame {
     private void cerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarActionPerformed
         // TODO add your handling code here:
         System.out.println("CERRAR");
+        
     }//GEN-LAST:event_cerrarActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         // TODO add your handling code here:
         System.out.println("SALIR");
+        int res = JOptionPane.showConfirmDialog(rootPane, "¿Desea salir de la aplicación?", "Confirmación de Salir", JOptionPane.YES_NO_OPTION,JOptionPane.CLOSED_OPTION);
+        if(res==0){
+            this.setVisible(false);
+        }
+        
     }//GEN-LAST:event_salirActionPerformed
 
     private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
@@ -227,8 +225,10 @@ public class Practica6 extends javax.swing.JFrame {
 
     private void umbralizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_umbralizarActionPerformed
         // TODO add your handling code here:
+        String aux = JOptionPane.showInputDialog(rootPane,"Introduzca un valor para el umbralizado","Umbralizado",JOptionPane.DEFAULT_OPTION);
+        int dato = Integer.parseInt(aux);
         Mat m = Imgcodecs.imread(fc.getSelectedFile().getAbsolutePath());
-        Mat im = umbralizar(m,100);
+        Mat im = umbralizar(m,dato);
         BufferedImage i = (BufferedImage) HighGui.toBufferedImage(im);
         lienzo.setImagen(i);
         repaint();
@@ -306,10 +306,7 @@ public class Practica6 extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private com.mycompany.practica6diu.Lienzo lienzo;
-    private javax.swing.JMenu menuColor;
     private javax.swing.JMenu menuFiltros;
-    private javax.swing.JMenuItem polarizado;
-    private javax.swing.JMenuItem realice;
     private javax.swing.JMenuItem salir;
     private javax.swing.JMenuItem umbralizar;
     // End of variables declaration//GEN-END:variables

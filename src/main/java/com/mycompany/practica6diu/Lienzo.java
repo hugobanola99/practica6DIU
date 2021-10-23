@@ -5,6 +5,7 @@
  */
 package com.mycompany.practica6diu;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,6 +37,7 @@ public class Lienzo extends JPanel{
     
     public void setImagen(String path) throws IOException{
         imagen = ImageIO.read(new File(path));
+        
     }
     
    public void setImagen(BufferedImage i){

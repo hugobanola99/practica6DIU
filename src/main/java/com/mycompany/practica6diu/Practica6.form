@@ -71,28 +71,16 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="umbralizar">
                   <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Ctrl+U"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Umbralizar"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="umbralizarActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="realice">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Realice"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="polarizado">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Polarizado"/>
-                  </Properties>
-                </MenuItem>
               </SubComponents>
-            </Menu>
-            <Menu class="javax.swing.JMenu" name="menuColor">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Color"/>
-              </Properties>
             </Menu>
           </SubComponents>
         </Menu>
