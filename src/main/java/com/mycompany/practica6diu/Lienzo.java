@@ -5,7 +5,6 @@
  */
 package com.mycompany.practica6diu;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,18 +20,14 @@ public class Lienzo extends JPanel{
     
     BufferedImage imagen = null;
     
-    public Lienzo() throws IOException {
-        
-        System.out.println("LIENZO BUILD");
-        
+    public Lienzo() throws IOException { 
     }
     
     @Override
     public void paintComponent(Graphics g){
         super.paintComponents(g);
-        
         g.drawImage(imagen, 0, 0, null);
-        System.out.println("LIENZO DRAW");
+        
     }
     
     public void setImagen(String path) throws IOException{

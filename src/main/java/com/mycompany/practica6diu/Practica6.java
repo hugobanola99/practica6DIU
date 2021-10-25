@@ -25,7 +25,13 @@ public class Practica6 extends javax.swing.JFrame {
 
     JFileChooser fc = new JFileChooser();
     FileNameExtensionFilter filtro = null;
+    Mat img;
+    int dato;
+    File fichero;
+    
     public Practica6() {
+        filtro = new FileNameExtensionFilter("Imagenes","jpg","jpeg","png");
+        fc.addChoosableFileFilter(filtro);
         this.setMinimumSize(new Dimension(800, 600));
         initComponents();
         nu.pattern.OpenCV.loadShared();
@@ -51,13 +57,14 @@ public class Practica6 extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         MenuFicheros = new javax.swing.JMenu();
         abrir = new javax.swing.JMenuItem();
-        cerrar = new javax.swing.JMenuItem();
         Guardar = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         salir = new javax.swing.JMenuItem();
         MenuEdicion = new javax.swing.JMenu();
         menuFiltros = new javax.swing.JMenu();
         umbralizar = new javax.swing.JMenuItem();
+        MenuAyuda = new javax.swing.JMenu();
+        ayuda = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,15 +90,6 @@ public class Practica6 extends javax.swing.JFrame {
             }
         });
         MenuFicheros.add(abrir);
-
-        cerrar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        cerrar.setText("Cerrar");
-        cerrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cerrarActionPerformed(evt);
-            }
-        });
-        MenuFicheros.add(cerrar);
 
         Guardar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         Guardar.setText("Guardar");
@@ -132,6 +130,19 @@ public class Practica6 extends javax.swing.JFrame {
 
         jMenuBar1.add(MenuEdicion);
 
+        MenuAyuda.setText("Ayuda");
+
+        ayuda.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        ayuda.setText("Acerca de");
+        ayuda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ayudaActionPerformed(evt);
+            }
+        });
+        MenuAyuda.add(ayuda);
+
+        jMenuBar1.add(MenuAyuda);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -155,15 +166,13 @@ public class Practica6 extends javax.swing.JFrame {
 
     private void abrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirActionPerformed
         // TODO add your handling code here:
-        filtro = new FileNameExtensionFilter("Imagenes","jpg","jpeg","png");
-        fc.addChoosableFileFilter(filtro);
+       
         int res = fc.showOpenDialog(null);
         if(res == JFileChooser.APPROVE_OPTION){
-            File fichero = fc.getSelectedFile();
+            fichero = fc.getSelectedFile();
             System.out.println("Fichero: "+fichero.getAbsolutePath());
             try {
                 lienzo.setImagen(fichero.getAbsolutePath());
-                
                 repaint();
             } catch (IOException ex) {
                 Logger.getLogger(Practica6.class.getName()).log(Level.SEVERE, null, ex);
@@ -172,28 +181,8 @@ public class Practica6 extends javax.swing.JFrame {
         }else if(res == JFileChooser.CANCEL_OPTION){
             System.out.println("Cancelar");
         }
-        /*
-        System.out.println("ABRIR");
-        filtro = new FileNameExtensionFilter("Texto","txt");
-        fc.addChoosableFileFilter(filtro);
-        filtro = new FileNameExtensionFilter("Imagenes","jpg","jpeg");
-        fc.addChoosableFileFilter(filtro);
-        int res = fc.showOpenDialog(null);
-        if(res == JFileChooser.APPROVE_OPTION){
-            System.out.println("Aceptar");
-            File fichero = fc.getSelectedFile();
-            System.out.println("Fihcero: "+fichero.getName());
-        }else if(res == JFileChooser.CANCEL_OPTION){
-            System.out.println("Cancelar");
-        }
-        */
+       
     }//GEN-LAST:event_abrirActionPerformed
-
-    private void cerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarActionPerformed
-        // TODO add your handling code here:
-        System.out.println("CERRAR");
-        
-    }//GEN-LAST:event_cerrarActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         // TODO add your handling code here:
@@ -210,11 +199,12 @@ public class Practica6 extends javax.swing.JFrame {
         int res = fc.showSaveDialog(null);
         if(res == JFileChooser.APPROVE_OPTION){
             System.out.println("Aceptar");
-            File fichero = fc.getSelectedFile();
+            fichero = fc.getSelectedFile();
             
             System.out.println("Fichero: "+fichero.getAbsolutePath());
             int opcion = JOptionPane.showConfirmDialog(rootPane, "¿Quiere guardar el archivo?", "Guardar Archivo", JOptionPane.YES_NO_OPTION);
             if(opcion == JOptionPane.YES_OPTION){
+                Imgcodecs.imwrite(fc.getSelectedFile().getAbsolutePath(), img);
                 System.out.println("Archivo Guardado");
             }
         }else if(res == JFileChooser.CANCEL_OPTION){
@@ -225,15 +215,30 @@ public class Practica6 extends javax.swing.JFrame {
 
     private void umbralizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_umbralizarActionPerformed
         // TODO add your handling code here:
-        String aux = JOptionPane.showInputDialog(rootPane,"Introduzca un valor para el umbralizado","Umbralizado",JOptionPane.DEFAULT_OPTION);
-        int dato = Integer.parseInt(aux);
-        Mat m = Imgcodecs.imread(fc.getSelectedFile().getAbsolutePath());
-        Mat im = umbralizar(m,dato);
-        BufferedImage i = (BufferedImage) HighGui.toBufferedImage(im);
-        lienzo.setImagen(i);
-        repaint();
-        JOptionPane.showMessageDialog(rootPane, "Proceso umbralizado concluido", "fin umbralizado", JOptionPane.INFORMATION_MESSAGE);
+        if(fichero != null){
+            String in = JOptionPane.showInputDialog(rootPane,"Introduzca un valor para el umbralizado","Umbralizado",JOptionPane.DEFAULT_OPTION);
+            if(isNumeric(in)){
+                dato = Integer.parseInt(in);
+                Mat m = Imgcodecs.imread(fc.getSelectedFile().getAbsolutePath());
+                img = umbralizar(m,dato);
+                BufferedImage i = (BufferedImage) HighGui.toBufferedImage(img);
+                lienzo.setImagen(i);
+                repaint();
+                JOptionPane.showMessageDialog(rootPane, "Proceso umbralizado concluido", "Proceso Umbralizado", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Debes introducir un numero entero", "Valor erroneo", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Debes abrir un fichero previamente", "Error umbralizar", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_umbralizarActionPerformed
+
+    private void ayudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ayudaActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(rootPane, "Selecionar una imagen desde el menú Ficheros eligiendo la opción abrir para elegir un archivo desde tu equipo local\nUna vez abierta, en el menu Edición se puede añadir el filtro umbralizar, al que habrá que introducir el valor del umbral", "Acerca de",JOptionPane.INFORMATION_MESSAGE);
+        
+    }//GEN-LAST:event_ayudaActionPerformed
     
     
      private Mat umbralizar(Mat imagen_original, Integer umbral) {
@@ -262,6 +267,18 @@ public class Practica6 extends javax.swing.JFrame {
 
 
     }
+     
+     public boolean isNumeric(String n){
+         boolean res;
+          try {
+                Integer.parseInt(n);
+                res = true;
+            }catch(NumberFormatException excepcion){
+                res = false;
+                
+            }
+          return res;
+     }
     /**
      * @param args the command line arguments
      */
@@ -299,10 +316,11 @@ public class Practica6 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Guardar;
+    private javax.swing.JMenu MenuAyuda;
     private javax.swing.JMenu MenuEdicion;
     private javax.swing.JMenu MenuFicheros;
     private javax.swing.JMenuItem abrir;
-    private javax.swing.JMenuItem cerrar;
+    private javax.swing.JMenuItem ayuda;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private com.mycompany.practica6diu.Lienzo lienzo;
